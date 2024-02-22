@@ -13,13 +13,13 @@ Metadata:
       - lambda
       - pyspark
       - serverless
-    HomePageUrl: 'https://github.com/aws-samples/spark-on-aws-lambda'
+    HomePageUrl: 'https://github.com/naiaracerqueira/spark-on-aws-lambda'
     SemanticVersion: 1.2.0
-    SourceCodeUrl: 'https://github.com/aws-samples/spark-on-aws-lambda'
+    SourceCodeUrl: 'https://github.com/naiaracerqueira/spark-on-aws-lambda'
 
 Parameters:
   ImageUri:
-    Description: 'Mandatory: ECR Uri for the image. If not present, then create and push using the sam-imagebuilder.yaml in the github https://github.com/aws-samples/spark-on-aws-lambda '
+    Description: 'Mandatory: ECR Uri for the image. If not present, then create and push using the sam-imagebuilder.yaml in the github https://github.com/naiaracerqueira/spark-on-aws-lambda '
     Type: String
     Default: ''
   ScriptBucket:
@@ -28,6 +28,12 @@ Parameters:
   SparkScript:
     Type: String
     Description: 'Mandatory: Amazon S3 key where the spark script resides. Start without the /.eg: script/location/name.py'
+  InputPath:
+    Type: String
+    Description: 'Mandatory: Amazon S3 key.'
+  OutputPath:
+    Type: String
+    Description: 'Mandatory: Amazon S3 key.'
   LambdaFunctionPrefix:
     Description: 'Optional: This is the prefix for the name of the lambda function that will be created. This name must satisfy the pattern ^[a-z0-9-_]{1,64}$'
     Type: String
@@ -129,12 +135,8 @@ Resources:
 
           - Effect: Allow
             Action:
-              - s3:ListBucket
-            Resource: !Sub 'arn:aws:s3:::${ScriptBucket}'
-          - Effect: Allow
-            Action:
-              - s3:Get*
-            Resource: !Sub 'arn:aws:s3:::${ScriptBucket}/${SparkScript}'
+              - s3:*
+            Resource: !Sub 'arn:aws:s3:::${ScriptBucket}/*'
       Roles:
         - !Ref LambdaRole
 
@@ -171,6 +173,5 @@ Resources:
         Variables:
           SCRIPT_BUCKET: !Ref ScriptBucket
           SPARK_SCRIPT: !Ref SparkScript
-          #INPUT_PATH: !Ref InputPath
-          #OUTPUT_PATH: !Ref OutputPath
-
+          INPUT_PATH: !Ref InputPath
+          OUTPUT_PATH: !Ref OutputPath

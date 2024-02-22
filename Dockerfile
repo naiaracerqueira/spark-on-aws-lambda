@@ -54,6 +54,7 @@ ENV CUSTOM_SQL=""
 # spark-class file is setting the memory to 1 GB
 COPY spark-class $SPARK_HOME/bin/
 RUN chmod -R 755 $SPARK_HOME
+RUN chmod -R 755 /var/task/
 
 # Copy the Pyspark script to container
 COPY sparkLambdaHandler.py ${LAMBDA_TASK_ROOT}
